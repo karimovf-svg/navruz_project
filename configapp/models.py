@@ -52,6 +52,20 @@ class ContactMessage(models.Model):
     subject = models.CharField(max_length=200)
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    replied = models.BooleanField(default=False)  # Yangi maydon qo'shildi
 
     def __str__(self):
         return f"{self.name} - {self.subject}"
+
+    @property
+    def has_replies(self):
+        return self.replies.exists()
+
+class MessageReply(models.Model):
+    message = models.ForeignKey(ContactMessage, on_delete=models.CASCADE, related_name='replies')
+    content = models.TextField()
+    replied_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Reply to {self.message.subject}"
