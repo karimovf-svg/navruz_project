@@ -10,7 +10,7 @@ urlpatterns = [
     path('blog/', blog, name='blog'),
     path('blog-details/', blog_details, name='blog-details'),
     path('contact/', contact_view, name='contact'),
-    path('messages/', messages_view, name='messages'),
-    path('messages/<int:message_id>/', client_message, name='client_message'),
-    path('messages/<int:message_id>/reply/', reply_message, name='reply_message'),
+    path('massages/', messages_view, name='messages'),
+    path('massages/<int:message_id>/', client_massage, name='client_massage'),
+    path('massages/<int:message_id>/reply/', reply_message, name='reply_message'),
 ]

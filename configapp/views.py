@@ -72,24 +72,12 @@ def contact_view(request):
     if request.method == 'POST':
         form = ContactForm(request.POST)
         if form.is_valid():
-            contact = ContactMessage.objects.create(
-                name=form.cleaned_data['name'],
-                email=form.cleaned_data['email'],
-                subject=form.cleaned_data['subject'],
-                message=form.cleaned_data['message']
-            )
-
-            # Email jo‘natish
-            send_mail(
-                f"New Contact Form Submission: {contact.subject}",
-                f"Name: {contact.name}\nEmail: {contact.email}\n\nMessage:\n{contact.message}",
-                'your-email@example.com',
-                ['admin@example.com'],
-                fail_silently=False,
-            )
-
+            contact = form.save(commit=False)
+            if request.user.is_authenticated:
+                contact.author = request.user
+            contact.save()
             success_message = "Your message has been sent. Thank you!"
-            return redirect('contact')  # Forma yuborilgandan keyin sahifani yangilaydi
+            return redirect('contact')
 
     return render(request, 'staff_panel#contact.html', {'form': form, 'success_message': success_message})
 
@@ -101,10 +89,10 @@ def messages_view(request):
 
 
 @login_required
-def client_message(request, message_id):
-    message = get_object_or_404(ContactMessage, id=message_id)
+def client_massage(request, message_id):
+    message = get_object_or_404(ContactMessage, id=message_id, author=request.user)
     replies = MessageReply.objects.filter(message=message).order_by('created_at')
-    return render(request, 'client_massege.html', {
+    return render(request, 'client_massage.html', {
         'message': message,
         'replies': replies
     })
@@ -123,17 +111,5 @@ def reply_message(request, message_id):
             )
             message.replied = True
             message.save()
-
-            # Email jo'natish
-            send_mail(
-                f"Javob: {message.subject}",
-                f"Xabaringizga javob:\n\n{content}\n\nHurmat bilan,\n{request.user.name}",
-                'your-email@example.com',
-                [message.email],
-                fail_silently=False,
-            )
-
-            messages.success(request, "Javob muvaffaqiyatli yuborildi va email jo'natildi")
-        return redirect('client_massege', message_id=message.id)
+        return redirect('client_massage', message_id=message.id)
     return redirect('messages')
-

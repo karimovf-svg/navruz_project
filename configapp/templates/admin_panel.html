@@ -43,30 +43,13 @@
 
       <nav id="navmenu" class="navmenu">
         <ul>
-          <li><a href="{% url 'home' %}">Home<br></a></li>
+          <li><a href="{% url 'admin_panel' %}">Home<br></a></li>
           <li><a href="#about">About</a></li>
           <li><a href="#services">Services</a></li>
           <li><a href="#portfolio">Portfolio</a></li>
           <li><a href="#team">Team</a></li>
-          <li><a href="{% url 'blog' %}" class="active">Blog</a></li>
-          <li class="dropdown"><a href="#"><span>Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-            <ul>
-              <li><a href="#">Dropdown 1</a></li>
-              <li class="dropdown"><a href="#"><span>Deep Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-                <ul>
-                  <li><a href="#">Deep Dropdown 1</a></li>
-                  <li><a href="#">Deep Dropdown 2</a></li>
-                  <li><a href="#">Deep Dropdown 3</a></li>
-                  <li><a href="#">Deep Dropdown 4</a></li>
-                  <li><a href="#">Deep Dropdown 5</a></li>
-                </ul>
-              </li>
-              <li><a href="#">Dropdown 2</a></li>
-              <li><a href="#">Dropdown 3</a></li>
-              <li><a href="#">Dropdown 4</a></li>
-            </ul>
-          </li>
-          <li><a href="#contact">Contact</a></li>
+          <li><a href="{% url 'admin_panel' %}" class="active">Massage</a></li>
+          <li><a href="#">Contact</a></li>
         </ul>
         <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
       </nav>
@@ -81,98 +64,97 @@
     <!-- Starter Section -->
     <section id="starter-section" class="starter-section section">
 
-      <!-- Section Title -->
       <div class="container" data-aos="fade-up">
-      <h2 >XABARLAR</h2>
+        <h2>XABARLAR</h2>
 
-    <div class="messages-list">
-        {% for message in messages %}
-        <div class="message-card" onclick="window.location.href='{% url 'client_message' message.id %}'">
+        <div class="messages-list">
+          {% for message in messages %}
+          <div class="message-card" onclick="window.location.href='{% url 'client_massage' message.id %}'">
             <div class="message-header">
-                <span class="sender">{{ message.name }} | {{ message.email }} | {{ message.subject }}</span>
-                <span class="time">{{ message.created_at|date:"M d, Y, h:i a" }}</span>
+              <span class="sender">{{ message.name }} | {{ message.email }} | {{ message.subject }}</span>
+              <span class="time">{{ message.created_at|date:"M d, Y, h:i a" }}</span>
             </div>
             <div class="message-preview">
-                {{ message.message|truncatechars:50 }}
+              {{ message.message|truncatechars:50 }}
             </div>
-            {% if message.replies.exists %}
-            <span class="badge replied">Javob berilgan</span>
+            {% if message.has_replies %}
+              <span class="badge replied">Javob berilgan</span>
             {% else %}
-            <span class="badge not-replied">Javob kutilyapti</span>
+              <span class="badge not-replied">Javob kutilyapti</span>
             {% endif %}
-        </div>
-        {% empty %}
-        <div class="empty-messages">
+          </div>
+          {% empty %}
+          <div class="empty-messages">
             <p>Hozircha yangi xabar yo'q.</p>
+          </div>
+          {% endfor %}
         </div>
-        {% endfor %}
-    </div>
-</div>
+      </div>
 
 <style>
-    .messages-list {
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
+  .messages-list {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  }
 
-    .message-card {
-        padding: 15px 20px;
-        border-bottom: 1px solid #eee;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        position: relative;
-    }
+  .message-card {
+    padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+  }
 
-    .message-card:hover {
-        background-color: #f9f9f9;
-    }
+  .message-card:hover {
+    background-color: #f9f9f9;
+  }
 
-    .message-header {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 8px;
-    }
+  .message-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
 
-    .sender {
-        font-weight: 500;
-        color: #333;
-    }
+  .sender {
+    font-weight: 500;
+    color: #333;
+  }
 
-    .time {
-        color: #888;
-        font-size: 13px;
-    }
+  .time {
+    color: #888;
+    font-size: 13px;
+  }
 
-    .message-preview {
-        color: #666;
-        font-size: 14px;
-    }
+  .message-preview {
+    color: #666;
+    font-size: 14px;
+  }
 
-    .badge {
-        position: absolute;
-        right: 20px;
-        bottom: 15px;
-        padding: 3px 8px;
-        border-radius: 12px;
-        font-size: 12px;
-    }
+  .badge {
+    position: absolute;
+    right: 20px;
+    bottom: 15px;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+  }
 
-    .replied {
-        background-color: #e6f7ee;
-        color: #28a745;
-    }
+  .replied {
+    background-color: #e6f7ee;
+    color: #28a745;
+  }
 
-    .not-replied {
-        background-color: #fff3cd;
-        color: #856404;
-    }
+  .not-replied {
+    background-color: #fff3cd;
+    color: #856404;
+  }
 
-    .empty-messages {
-        padding: 30px;
-        text-align: center;
-        color: #888;
-    }
+  .empty-messages {
+    padding: 30px;
+    text-align: center;
+    color: #888;
+  }
 </style>
 
     </section><!-- /Starter Section -->
